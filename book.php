@@ -293,8 +293,8 @@ if ($result && $result->num_rows > 0) {
                     '<?= htmlspecialchars($book['title'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['author'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['location'], ENT_QUOTES) ?>',
+                    '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>'
                     '<?= htmlspecialchars($book['category_id'] ?? '', ENT_QUOTES) ?>',
-                      '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>'
                 )">
                 <?php if (!empty($book['image']) && file_exists($imagePath)): ?>
                     <img src="<?= $imagePath ?>" alt="Book Image" class="book-image">
