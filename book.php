@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
+    $category_id = trim($_POST['category_id']);
     $description = trim($_POST['description']);
     $imageFileName = null;
 
@@ -44,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$error && $title && $author && $location) {
-        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $title, $author, $location, $description, $imageFileName);
+        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName,$category_id,);
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -292,7 +293,8 @@ if ($result && $result->num_rows > 0) {
                     '<?= htmlspecialchars($book['title'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['author'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['location'], ENT_QUOTES) ?>',
-                    '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>'
+                    '<?= htmlspecialchars($book['category_id'] ?? '', ENT_QUOTES) ?>',
+                      '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>'
                 )">
                 <?php if (!empty($book['image']) && file_exists($imagePath)): ?>
                     <img src="<?= $imagePath ?>" alt="Book Image" class="book-image">
@@ -323,8 +325,8 @@ if ($result && $result->num_rows > 0) {
     <label for="location">Location:</label><br>
     <input type="text" name="location" id="location" required style="width:100%; margin-bottom:10px;"><br>
 
-    <label for="category_name">Category:</label><br>
-    <input type="text" name="category_name" id="category_name" required style="width:100%; margin-bottom:10px;" placeholder="Enter category name"><br>
+    <label for="category_id">Category:</label><br>
+    <input type="text" name="category_id" id="category_id" required style="width:100%; margin-bottom:10px;" placeholder="Enter category_id"><br>
 
     <label for="image">Image:</label><br>
     <input type="file" name="image" id="image" style="margin-bottom:10px;"><br>
@@ -345,6 +347,7 @@ if ($result && $result->num_rows > 0) {
         <h2 id="descTitle"></h2>
         <h4 id="descAuthor"></h4>
         <p id="descLocation"></p>
+        <p id="desccategory_id"></p>
         <p id="descDescription"></p>
         <button onclick="closeExpandedView()">Close</button>
     </div>
@@ -358,11 +361,12 @@ if ($result && $result->num_rows > 0) {
         carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     }
 
-    function openExpandedView(imageSrc, title, author, location, description) {
+    function openExpandedView(imageSrc, title, author, location, description, category_id) {
         document.getElementById('expandedImage').src = imageSrc;
         document.getElementById('descTitle').textContent = title;
         document.getElementById('descAuthor').textContent = 'By: ' + author;
         document.getElementById('descLocation').textContent = 'Location: ' + location;
+        document.getElementById('desccategory_id').textContent = 'Category_id: ' + category_id;
         document.getElementById('descDescription').textContent = 'Description: ' + description;
         document.getElementById('expandedView').style.display = 'flex';
         document.body.style.overflow = 'hidden';
