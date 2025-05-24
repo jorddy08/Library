@@ -366,8 +366,8 @@ if ($result && $result->num_rows > 0) {
         document.getElementById('descTitle').textContent = title;
         document.getElementById('descAuthor').textContent = 'By: ' + author;
         document.getElementById('descLocation').textContent = 'Location: ' + location;
-        document.getElementById('desccategory_id').textContent = 'Category_id: ' + category_id;
         document.getElementById('descDescription').textContent = 'Description: ' + description;
+        document.getElementById('desccategory_id').textContent = 'Category_id: ' + category_id;
         document.getElementById('expandedView').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
