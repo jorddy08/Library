@@ -23,8 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
-    $category_id = trim($_POST['category_id']);
     $description = trim($_POST['description']);
+    $category_id = trim($_POST['category_id']);
     $imageFileName = null;
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -347,8 +347,8 @@ if ($result && $result->num_rows > 0) {
         <h2 id="descTitle"></h2>
         <h4 id="descAuthor"></h4>
         <p id="descLocation"></p>
-        <p id="desccategory_id"></p>
         <p id="descDescription"></p>
+        <p id="desccategory_id"></p>
         <button onclick="closeExpandedView()">Close</button>
     </div>
 </div>
