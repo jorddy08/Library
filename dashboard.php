@@ -15,7 +15,7 @@ if (!isset($_SESSION["username"])) {
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f4f4;
+            background-color:rgb(234, 12, 12);
         }
 
         .sidebar {
