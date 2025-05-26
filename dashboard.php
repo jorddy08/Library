@@ -124,6 +124,24 @@ if (!isset($_SESSION["username"])) {
             z-index: 1;
         }
 
+        .bottom-right-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 150px;
+            height: 150px;
+            background-color: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .bottom-right-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -135,7 +153,7 @@ if (!isset($_SESSION["username"])) {
         <a href="book.php">Library</a>
         <a href="addbook.php">Add Book</a>
         <a href="about.php">About</a>
-        <a href="logout.php">Logout</a>
+        <a href="#" onclick="delayedLogout(event)">Logout</a>
     </div>
 
     <div class="main">
@@ -162,15 +180,32 @@ if (!isset($_SESSION["username"])) {
                 <span>Library</span>
             </a>
             <a href="addbook.php" class="box bg-purple">
-                <img src="images/addbook.png" alt="addbook">
+                <img src="images/addbook.png" alt="Add Book">
                 <span>Add Book</span>
             </a>
             <a href="about.php" class="box bg-yellow">
-                <img src="images/about.png" alt="about">
+                <img src="images/about.png" alt="About">
                 <span>About</span>
             </a>
         </div>
     </div>
+
+    <div class="bottom-right-container">
+        <!-- Replace with your image -->
+        <img src="images/library-icon.png" alt="Library Icon">
+    </div>
+
+    <script>
+        function delayedLogout(event) {
+            event.preventDefault(); // Prevent immediate navigation
+            const confirmLogout = confirm("Are you sure you want to logout?");
+            if (confirmLogout) {
+                setTimeout(() => {
+                    window.location.href = "logout.php";
+                }, 1500); // 1.5 second delay
+            }
+        }
+    </script>
 
 </body>
 </html>
