@@ -127,7 +127,7 @@ if ($result && $result->num_rows > 0) {
         .book-list-wrapper {
             max-width: 90%;
             margin: 0 auto;
-            height: 400px; /* fixed height for scroll */
+            height: 600px; /* fixed height for scroll */
             overflow-y: auto;
             padding-right: 10px; /* space for scrollbar */
             border-radius: 8px;
