@@ -311,32 +311,6 @@ if ($result && $result->num_rows > 0) {
             <p style="color: var(--foreground);">No books found.</p>
         <?php endif; ?>
     </div>
-    <form method="post" enctype="multipart/form-data">
-    <?php if ($error): ?>
-        <div class="error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
-
-    <label for="title">Title:</label><br>
-    <input type="text" name="title" id="title" required style="width:100%; margin-bottom:10px;"><br>
-
-    <label for="author">Author:</label><br>
-    <input type="text" name="author" id="author" required style="width:100%; margin-bottom:10px;"><br>
-
-    <label for="location">Location:</label><br>
-    <input type="text" name="location" id="location" required style="width:100%; margin-bottom:10px;"><br>
-
-    <label for="category_id">Category:</label><br>
-    <input type="text" name="category_id" id="category_id" required style="width:100%; margin-bottom:10px;" placeholder="Enter category_id"><br>
-
-    <label for="image">Image:</label><br>
-    <input type="file" name="image" id="image" style="margin-bottom:10px;"><br>
-
-    <label for="description">Description:</label><br>
-    <textarea id="description" name="description" rows="4" required style="width:100%; margin-bottom:10px;"></textarea><br>
-
-    <button type="submit" style="padding: 10px 20px; font-size: 1em;">Add Book</button>
-</form>
-
 
     <button class="arrow-btn arrow-right" onclick="scrollCarousel(1)">&#10095;</button>
 </div>
