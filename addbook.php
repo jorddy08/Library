@@ -15,42 +15,49 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$error = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $title = trim($_POST['title']);
-    $author = trim($_POST['author']);
-    $location = trim($_POST['location']);
-    $description = trim($_POST['description']);
-    $category_id = trim($_POST['category_id']);
-    $imageFileName = null;
-
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-        $fileName = $_FILES['image']['name'];
-        $fileTmp = $_FILES['image']['tmp_name'];
-        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-        if (in_array($fileExt, $allowed)) {
-            $imageFileName = uniqid() . '.' . $fileExt;
-            if (!is_dir('uploads')) {
-                mkdir('uploads', 0755);
-            }
-            move_uploaded_file($fileTmp, 'uploads/' . $imageFileName);
-        } else {
-            $error = "Only JPG, JPEG, PNG, and GIF files are allowed.";
-        }
+// Fetch only the specified 5 categories
+$categories = [];
+$catResult = $conn->query("
+    SELECT * FROM categories 
+    WHERE name IN ('Classic Fiction', 'Science Fiction/Dystopian', 'Fantasy', 'Historical Fiction', 'Others')
+");
+if ($catResult) {
+    while ($row = $catResult->fetch_assoc()) {
+        $categories[] = $row;
     }
+}
 
-    if (!$error && $title && $author && $location) {
-        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_id);
-        $stmt->execute();
-        $stmt->close();
-        header("Location: book.php");
-        exit();
-    } elseif (!$error) {
-        $error = "Please fill in all required fields.";
+// Fetch books (all or by category)
+$books = [];
+$selectedCategoryName = "All Books";
+if (isset($_GET['category_id'])) {
+    $category_id = intval($_GET['category_id']);
+    $stmt = $conn->prepare("
+        SELECT book.*, categories.name AS category_name 
+        FROM book 
+        JOIN categories ON book.category_id = categories.id 
+        WHERE category_id = ?
+    ");
+    $stmt->bind_param("i", $category_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $books[] = $row;
+    }
+    $stmt->close();
+
+    if (!empty($books)) {
+        $selectedCategoryName = $books[0]['category_name'];
+    }
+} else {
+    $result = $conn->query("
+        SELECT book.*, categories.name AS category_name 
+        FROM book 
+        JOIN categories ON book.category_id = categories.id 
+        ORDER BY book.id DESC
+    ");
+    while ($row = $result->fetch_assoc()) {
+        $books[] = $row;
     }
 }
 ?>
@@ -58,32 +65,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Book</title>
+    <title>Categories</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #1e1e2f;
-            color: white;
-            margin: 0;
-            padding: 40px;
+            background: #333;
+            color: #fff;
+            padding: 20px;
         }
-
-        .form-container {
-            max-width: 700px;
-            margin: 0 auto;
-            background-color: #2c2c3c;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        h1, h2 {
+            margin-bottom: 20px;
         }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
-        a.back-button {
+        .back-button {
             display: inline-block;
             margin-bottom: 20px;
             padding: 10px 16px;
@@ -93,99 +86,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 6px;
             transition: background-color 0.3s ease;
         }
-        a.back-button:hover {
+        .back-button:hover {
             background-color: #218838;
         }
-        
-        table {
-            width: 100%;
+        .categories {
+            margin-bottom: 30px;
         }
-
-        td {
-            padding: 10px;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            border: none;
+        .category-link {
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            margin-right: 10px;
             border-radius: 5px;
-            background-color: #444;
-            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 10px;
         }
-
-        input[type="file"] {
-            color: white;
+        .category-link:hover {
+            background: #777;
         }
-
-        button[type="submit"] {
-            background-color: #8e44ad;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
         }
-
-        button[type="submit"]:hover {
-            background-color: #732d91;
-        }
-
-        .error {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+        .category-box {
+            background: #555;
+            border-radius: 10px;
+            width: 180px;
             text-align: center;
+            padding: 15px;
+            transition: background 0.3s;
+        }
+        .category-box:hover {
+            background: #777;
+        }
+        .category-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background-color: #999;
+        }
+        .category-title {
+            font-size: 1.1em;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <a href="dashboard.php" class="back-button">← Back to Dashboard</a>
+<a href="dashboard.php" class="back-button">← Back to Dashboard</a>
 
-    <h2>Add a New Book</h2>
+<h1>Library</h1>
 
-    <?php if ($error): ?>
-        <div class="error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+<div class="categories">
+    <strong>Filter by Category:</strong><br>
+    <a href="?" class="category-link">All</a>
+    <?php foreach ($categories as $cat): ?>
+        <a href="?category_id=<?= $cat['id'] ?>" class="category-link">
+            <?= htmlspecialchars($cat['name']) ?>
+        </a>
+    <?php endforeach; ?>
+</div>
 
-    <form method="post" enctype="multipart/form-data">
-        <table>
-            <tr>
-                <td><label for="title">Title:</label></td>
-                <td><input type="text" name="title" id="title" required></td>
-            </tr>
-            <tr>
-                <td><label for="author">Author:</label></td>
-                <td><input type="text" name="author" id="author" required></td>
-            </tr>
-            <tr>
-                <td><label for="location">Location:</label></td>
-                <td><input type="text" name="location" id="location" required></td>
-            </tr>
-            <tr>
-                <td><label for="category_id">Category ID:</label></td>
-                <td><input type="text" name="category_id" id="category_id" placeholder="Enter category_id" required></td>
-            </tr>
-            <tr>
-                <td><label for="image">Image:</label></td>
-                <td><input type="file" name="image" id="image"></td>
-            </tr>
-            <tr>
-                <td><label for="description">Description:</label></td>
-                <td><textarea name="description" id="description" rows="4" required></textarea></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:center;">
-                    <button type="submit">Add Book</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+<h2><?= htmlspecialchars($selectedCategoryName) ?></h2>
+
+<div class="category-container">
+    <?php
+    if (!empty($books)) {
+        foreach ($books as $row) {
+            $imagePath = 'uploads/' . $row['image'];
+            ?>
+            <div class="category-box" title="<?= htmlspecialchars($row['title']) ?>">
+                <?php if (!empty($row['image']) && file_exists($imagePath)) : ?>
+                    <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($row['title']) ?>" class="category-image">
+                <?php else : ?>
+                    <div class="category-image" style="display:flex;align-items:center;justify-content:center;color:#222;background:#ccc;">No Image</div>
+                <?php endif; ?>
+                <div class="category-title"><?= htmlspecialchars($row['title']) ?></div>
+            </div>
+            <?php
+        }
+    } else {
+        echo "<p>No books found in this category.</p>";
+    }
+    ?>
 </div>
 
 </body>
