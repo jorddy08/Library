@@ -24,25 +24,31 @@ if ($catResult) {
     }
 }
 
-// Fetch books (all or by category)
+// Fetch books (all or by category_name)
 $books = [];
 $selectedCategoryName = "All Books";
-if (isset($_GET['category_name'])) {
-    $category_name = intval($_GET['category_name']);
-    $stmt = $conn->prepare("SELECT * FROM book WHERE category_name = ?");
-    $stmt->bind_param("i", $category_name);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $books[] = $row;
-    }
-    $stmt->close();
-
+if (isset($_GET['category_id'])) {
+    $category_id = intval($_GET['category_id']);
+    
+    // Get the category name from ID
+    $category_name = null;
     foreach ($categories as $cat) {
-        if ($cat['name'] == $category_name) {
-            $selectedCategoryName = $cat['name'];
+        if ($cat['id'] == $category_id) {
+            $category_name = $cat['name'];
+            $selectedCategoryName = $category_name;
             break;
         }
+    }
+
+    if ($category_name) {
+        $stmt = $conn->prepare("SELECT * FROM book WHERE category_name = ?");
+        $stmt->bind_param("s", $category_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $books[] = $row;
+        }
+        $stmt->close();
     }
 } else {
     $result = $conn->query("SELECT * FROM book ORDER BY id DESC");
@@ -135,7 +141,7 @@ if (isset($_GET['category_name'])) {
     <strong>Filter by Category:</strong><br>
     <a href="?" class="category-link">All</a>
     <?php foreach ($categories as $cat): ?>
-        <a href="?category_name=<?= $cat['name'] ?>" class="category-link">
+        <a href="?category_id=<?= $cat['id'] ?>" class="category-link">
             <?= htmlspecialchars($cat['name']) ?>
         </a>
     <?php endforeach; ?>
@@ -153,7 +159,9 @@ if (isset($_GET['category_name'])) {
                 <?php if (!empty($row['image']) && file_exists($imagePath)) : ?>
                     <img src="<?= $imagePath ?>" alt="<?= htmlspecialchars($row['title']) ?>" class="category-image">
                 <?php else : ?>
-                    <div class="category-image" style="display:flex;align-items:center;justify-content:center;color:#222;background:#ccc;">No Image</div>
+                    <div class="category-image" style="display:flex;align-items:center;justify-content:center;color:#222;background:#ccc;">
+                        No Image
+                    </div>
                 <?php endif; ?>
                 <div class="category-title"><?= htmlspecialchars($row['title']) ?></div>
             </div>
