@@ -133,7 +133,7 @@ if (!isset($_SESSION["username"])) {
         <a href="category.php">Category</a>
         <a href="author.php">Author</a>
         <a href="location_rack.php">Location Rack</a>
-        <a href="book.php">Book</a>
+        <a href="book.php">Library</a>
         <a href="addbook.php">Add Book</a>
         <a href="logout.php">Logout</a>
     </div>
@@ -162,7 +162,7 @@ if (!isset($_SESSION["username"])) {
                 <span>Location Rack</span>
             </a>
             <a href="book.php" class="box bg-red">
-                <img src="images/book.webp" alt="Book">
+                <img src="images/book.webp" alt="Library">
                 <span>Book</span>
             </a>
             <a href="addbook.php" class="box bg-purple">
