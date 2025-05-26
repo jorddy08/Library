@@ -69,7 +69,7 @@ if ($result && $result->num_rows > 0) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Books Scrollable</title>
+    <title>Books List</title>
     <style>
         :root {
             --background: #1e1e2f;
@@ -108,7 +108,7 @@ if ($result && $result->num_rows > 0) {
         a.back-button:hover {
             background-color: #218838;
         }
-        
+
         form {
             background: var(--card-bg);
             padding: 20px;
@@ -123,58 +123,84 @@ if ($result && $result->num_rows > 0) {
             margin-bottom: 15px;
         }
 
-        /* Removed arrow buttons styles */
-
-        .carousel-wrapper {
+        /* Scrollable vertical list container */
+        .book-list-wrapper {
             max-width: 90%;
             margin: 0 auto;
-            overflow: hidden;
-            padding: 20px 0;
+            height: 600px; /* fixed height for scroll */
+            overflow-y: auto;
+            padding-right: 10px; /* space for scrollbar */
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
 
-        .carousel {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding-bottom: 10px;
-            -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
-        }
-
-        .carousel::-webkit-scrollbar {
-            display: none;
+        /* Remove flex, use block for vertical stacking */
+        .book-list {
+            display: block;
+            padding: 10px;
         }
 
         .book-box {
-            flex: 0 0 220px;
             background-color: var(--card-bg);
             color: var(--foreground);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px 20px;
             font-weight: bold;
             font-size: 1.1em;
             cursor: pointer;
             box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
+            gap: 20px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease-in-out;
             user-select: none;
         }
 
         .book-box:hover {
-            transform: scale(1.05);
             background-color: var(--highlight);
+            transform: translateX(5px);
         }
 
         .book-image {
-            width: 100%;
-            height: 150px;
+            width: 120px;
+            height: 100px;
             object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 15px;
             background-color: #444;
+            flex-shrink: 0;
+        }
+
+        .book-info {
+            flex-grow: 1;
+        }
+
+        .book-info > div {
+            margin-bottom: 6px;
+        }
+
+        .book-title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .book-author, .book-location {
+            font-weight: normal;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Scrollbar styling for modern browsers */
+        .book-list-wrapper::-webkit-scrollbar {
+            width: 10px;
+        }
+        .book-list-wrapper::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 10px;
+        }
+        .book-list-wrapper::-webkit-scrollbar-track {
+            background-color: var(--card-bg);
         }
 
         #expandedView {
@@ -257,9 +283,9 @@ if ($result && $result->num_rows > 0) {
 <?php if ($error): ?>
     <div class="error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
-<div class="carousel-wrapper">
-    <!-- Removed arrow buttons -->
-    <div class="carousel" id="carousel">
+
+<div class="book-list-wrapper">
+    <div class="book-list" id="bookList">
         <?php foreach ($books as $book): ?>
             <?php $imagePath = 'uploads/' . $book['image']; ?>
             <div class="book-box" title="<?= htmlspecialchars($book['title']) ?>"
@@ -276,14 +302,16 @@ if ($result && $result->num_rows > 0) {
                 <?php else: ?>
                     <div class="book-image" style="display:flex;justify-content:center;align-items:center;color:#aaa;">No Image</div>
                 <?php endif; ?>
-                <div><?= htmlspecialchars($book['title']) ?></div>
-                <div style="font-weight:normal; font-size:0.9em; margin-top:6px;"><?= htmlspecialchars($book['author']) ?></div>
-                <div style="font-weight:normal; font-size:0.85em; margin-top:4px; opacity:0.8;"><?= htmlspecialchars($book['location']) ?></div>
+                <div class="book-info">
+                    <div class="book-title"><?= htmlspecialchars($book['title']) ?></div>
+                    <div class="book-author">By: <?= htmlspecialchars($book['author']) ?></div>
+                    <div class="book-location">Location: <?= htmlspecialchars($book['location']) ?></div>
+                </div>
             </div>
         <?php endforeach; ?>
 
         <?php if (empty($books)): ?>
-            <p style="color: var(--foreground);">No books found.</p>
+            <p style="color: var(--foreground); padding: 10px;">No books found.</p>
         <?php endif; ?>
     </div>
 </div>
@@ -301,15 +329,13 @@ if ($result && $result->num_rows > 0) {
 </div>
 
 <script>
-    // Removed scrollCarousel function and arrow buttons
-
     function openExpandedView(imageSrc, title, author, location, description, category_id) {
         document.getElementById('expandedImage').src = imageSrc;
         document.getElementById('descTitle').textContent = title;
         document.getElementById('descAuthor').textContent = 'By: ' + author;
         document.getElementById('descLocation').textContent = 'Location: ' + location;
         document.getElementById('descDescription').textContent = 'Description: ' + description;
-        document.getElementById('desccategory_id').textContent = 'Category_id: ' + category_id;
+        document.getElementById('desccategory_id').textContent = 'Category ID: ' + category_id;
         document.getElementById('expandedView').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
