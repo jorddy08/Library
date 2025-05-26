@@ -134,7 +134,7 @@ if (!isset($_SESSION["username"])) {
         <a href="author.php">Author</a>
         <a href="location_rack.php">Location Rack</a>
         <a href="book.php">Book</a>
-        <a href="issue_book.php">Issue Book</a>
+        <a href="addbook.php">Issue Book</a>
         <a href="logout.php">Logout</a>
     </div>
 
@@ -165,7 +165,7 @@ if (!isset($_SESSION["username"])) {
                 <img src="images/book.webp" alt="Book">
                 <span>Book</span>
             </a>
-            <a href="issue_book.php" class="box bg-purple">
+            <a href="addbook.php" class="box bg-purple">
                 <img src="images/library.jpg" alt="Issue Book">
                 <span>Issue Book</span>
             </a>
