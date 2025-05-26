@@ -191,7 +191,7 @@ if (!isset($_SESSION["username"])) {
 
     <div class="bottom-right-container">
         <!-- Replace with your image -->
-        <img src="images/bookgif.gif" alt="Library Icon">
+        <img src="images/bird.gif" alt="Library Icon">
     </div>
 
     <script>
