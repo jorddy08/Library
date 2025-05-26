@@ -27,10 +27,10 @@ if ($catResult) {
 // Fetch books (all or by category)
 $books = [];
 $selectedCategoryName = "All Books";
-if (isset($_GET['category_id'])) {
-    $category_id = intval($_GET['category_id']);
-    $stmt = $conn->prepare("SELECT * FROM book WHERE category_id = ?");
-    $stmt->bind_param("i", $category_id);
+if (isset($_GET['category_name'])) {
+    $category_name = intval($_GET['category_name']);
+    $stmt = $conn->prepare("SELECT * FROM book WHERE category_name = ?");
+    $stmt->bind_param("i", $category_name);
     $stmt->execute();
     $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
@@ -39,13 +39,13 @@ if (isset($_GET['category_id'])) {
     $stmt->close();
 
     foreach ($categories as $cat) {
-        if ($cat['id'] == $category_id) {
+        if ($cat['name'] == $category_name) {
             $selectedCategoryName = $cat['name'];
             break;
         }
     }
 } else {
-    $result = $conn->query("SELECT * FROM book ORDER BY id DESC");
+    $result = $conn->query("SELECT * FROM book ORDER BY name DESC");
     while ($row = $result->fetch_assoc()) {
         $books[] = $row;
     }
@@ -135,7 +135,7 @@ if (isset($_GET['category_id'])) {
     <strong>Filter by Category:</strong><br>
     <a href="?" class="category-link">All</a>
     <?php foreach ($categories as $cat): ?>
-        <a href="?category_id=<?= $cat['id'] ?>" class="category-link">
+        <a href="?category_name=<?= $cat['name'] ?>" class="category-link">
             <?= htmlspecialchars($cat['name']) ?>
         </a>
     <?php endforeach; ?>
