@@ -40,24 +40,18 @@ $stmt->close();
             position: relative;
         }
 
-        .back-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #2e7d32;
-            font-weight: 600;
+        a.back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            background-color: #28a745;
+            color: #fff;
             text-decoration: none;
-            font-size: 0.95em;
-            background: #ffffff;
-            padding: 8px 14px;
             border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-            transition: background 0.2s ease, color 0.2s ease;
+            transition: background-color 0.3s ease;
         }
-
-        .back-link:hover {
-            background: #c8e6c9;
-            color: #1b5e20;
+        a.back-button:hover {
+            background-color: #218838;
         }
 
         .card {
