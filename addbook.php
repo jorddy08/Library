@@ -5,7 +5,6 @@ if (!isset($_SESSION["username"])) {
     exit();
 }
 
-// DB connection
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -18,8 +17,7 @@ if ($conn->connect_error) {
 
 $error = "";
 
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
@@ -44,12 +42,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    if (!$error && $title && $author && $location && $description && $category_id) {
+    if (!$error && $title && $author && $location) {
         $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_id);
         $stmt->execute();
         $stmt->close();
-
         header("Location: book.php");
         exit();
     } elseif (!$error) {
@@ -65,18 +62,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #1e1e2f;
+            color: white;
             margin: 0;
             padding: 40px;
         }
 
         .form-container {
-            width: 600px;
+            max-width: 700px;
             margin: 0 auto;
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            background-color: #2c2c3c;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ffffff;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #95a5a6;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #7f8c8d;
         }
 
         table {
@@ -84,43 +104,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         td {
-            padding: 10px 5px;
-            vertical-align: top;
+            padding: 10px;
         }
 
-        input[type="text"],
-        textarea {
+        input[type="text"], textarea {
             width: 100%;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
         }
 
         input[type="file"] {
-            padding: 4px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-            background-color: #3498db;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
 
-        button:hover {
-            background-color: #2980b9;
+        button[type="submit"] {
+            background-color: #8e44ad;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #732d91;
         }
 
         .error {
-            color: red;
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
             margin-bottom: 15px;
-            text-align: center;
-        }
-
-        h1 {
+            border-radius: 5px;
             text-align: center;
         }
     </style>
@@ -128,7 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
 <div class="form-container">
-    <h1>Add a New Book</h1>
+    <a href="dashboard.php" class="back-button">← Back to Dashboard</a>
+
+    <h2>Add a New Book</h2>
 
     <?php if ($error): ?>
         <div class="error"><?= htmlspecialchars($error) ?></div>
@@ -150,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </tr>
             <tr>
                 <td><label for="category_id">Category ID:</label></td>
-                <td><input type="text" name="category_id" id="category_id" required></td>
+                <td><input type="text" name="category_id" id="category_id" placeholder="Enter category_id" required></td>
             </tr>
             <tr>
                 <td><label for="image">Image:</label></td>
