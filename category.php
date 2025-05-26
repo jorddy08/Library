@@ -15,12 +15,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch only the specified 5 categories
+// Fetch categories
 $categories = [];
-$catResult = $conn->query("
-    SELECT * FROM categories 
-    WHERE name IN ('Classic Fiction', 'Science Fiction/Dystopian', 'Fantasy', 'Historical Fiction', 'Others')
-");
+$catResult = $conn->query("SELECT * FROM categories");
 if ($catResult) {
     while ($row = $catResult->fetch_assoc()) {
         $categories[] = $row;
@@ -32,12 +29,7 @@ $books = [];
 $selectedCategoryName = "All Books";
 if (isset($_GET['category_id'])) {
     $category_id = intval($_GET['category_id']);
-    $stmt = $conn->prepare("
-        SELECT book.*, categories.name AS category_name 
-        FROM book 
-        JOIN categories ON book.category_id = categories.id 
-        WHERE category_id = ?
-    ");
+    $stmt = $conn->prepare("SELECT * FROM book WHERE category_id = ?");
     $stmt->bind_param("i", $category_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -46,16 +38,14 @@ if (isset($_GET['category_id'])) {
     }
     $stmt->close();
 
-    if (!empty($books)) {
-        $selectedCategoryName = $books[0]['category_name'];
+    foreach ($categories as $cat) {
+        if ($cat['id'] == $category_id) {
+            $selectedCategoryName = $cat['name'];
+            break;
+        }
     }
 } else {
-    $result = $conn->query("
-        SELECT book.*, categories.name AS category_name 
-        FROM book 
-        JOIN categories ON book.category_id = categories.id 
-        ORDER BY book.id DESC
-    ");
+    $result = $conn->query("SELECT * FROM book ORDER BY id DESC");
     while ($row = $result->fetch_assoc()) {
         $books[] = $row;
     }
