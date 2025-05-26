@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
-    $category_id = intval($_POST['category_id']); // comes from dropdown
+    $category_name = intval($_POST['category_name']); // comes from dropdown
     $imageFileName = null;
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -56,8 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$error && $title && $author && $location) {
-        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssi", $title, $author, $location, $description, $imageFileName, $category_id);
+        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_name) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssi", $title, $author, $location, $description, $imageFileName, $category_name);
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -182,9 +182,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <td><input type="text" name="location" id="location" required></td>
             </tr>
             <tr>
-                <td><label for="category_id">Category:</label></td>
+                <td><label for="category_name">Category:</label></td>
                 <td>
-                    <select name="category_id" id="category_id" required>
+                    <select name="category_name" id="category_name" required>
                         <option value="">-- Select Category --</option>
                         <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
