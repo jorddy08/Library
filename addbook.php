@@ -19,7 +19,7 @@ $error = "";
 
 // ✅ Fetch category options from DB
 $categories = [];
-$result = $conn->query("SELECT id, name FROM categories WHERE name IN (
+$result = $conn->query("SELECT name, name FROM categories WHERE name IN (
     'Classic Fiction',
     'Science Fiction / Dystopian',
     'Fantasy',
