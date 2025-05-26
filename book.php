@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!$error && $title && $author && $location) {
         $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName,$category_id,);
+        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_id);
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -95,15 +95,20 @@ if ($result && $result->num_rows > 0) {
             margin-bottom: 15px;
         }
 
-        a.back-link {
+        .back-button {
             display: inline-block;
             margin-bottom: 20px;
-            color: var(--secondary);
+            background-color: rgb(10, 244, 37);
+            color: white;
+            padding: 10px 18px;
             text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
 
-        a.back-link:hover {
-            text-decoration: underline;
+        .back-button:hover {
+            background-color: rgb(8, 243, 55);
         }
 
         form {
@@ -275,7 +280,7 @@ if ($result && $result->num_rows > 0) {
 </head>
 <body>
 
-<a href="dashboard.php" class="back-link">&larr; Back to Dashboard</a>
+<a href="dashboard.php" class="back-button">← Back to Dashboard</a>
 
 <h1>Books</h1>
 
@@ -294,7 +299,7 @@ if ($result && $result->num_rows > 0) {
                     '<?= htmlspecialchars($book['author'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['location'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>',
-                    '<?= htmlspecialchars($book['category_id'] ?? '', ENT_QUOTES) ?>',
+                    '<?= htmlspecialchars($book['category_id'] ?? '', ENT_QUOTES) ?>'
                 )">
                 <?php if (!empty($book['image']) && file_exists($imagePath)): ?>
                     <img src="<?= $imagePath ?>" alt="Book Image" class="book-image">
