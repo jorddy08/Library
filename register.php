@@ -22,12 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert statement now includes first_name, last_name, middle_initial, email
         $stmt = $conn->prepare("INSERT INTO account (email, username, password, first_name, last_name, middle_initial) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $email, $username, $hashed_password, $first_name, $last_name, $middle_initial);
 
         if ($stmt->execute()) {
-            $message = "<span style='color: #28a745;'>✅ Registration successful. <a href='login.php' style='color:#00aaff;'>Login here</a>.</span>";
+            // Optional: Set a session or cookie to show a success message on login page
+            // session_start();
+            // $_SESSION['register_success'] = true;
+
+            header("Location: login.php");
+            exit();
         } else {
             $message = "<span style='color: red;'>❌ Error: " . htmlspecialchars($stmt->error) . "</span>";
         }
@@ -178,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Hide notification after 3 seconds
-        window.onload = function() {
+        window.onload = function () {
             const notif = document.getElementById('notification');
             if (notif) {
                 setTimeout(() => {
