@@ -62,33 +62,112 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Add Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .form-container {
+            width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+        }
+
+        td {
+            padding: 10px 5px;
+            vertical-align: top;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="file"] {
+            padding: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
+<div class="form-container">
     <h1>Add a New Book</h1>
+
+    <?php if ($error): ?>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+
     <form method="post" enctype="multipart/form-data">
-        <?php if ($error): ?>
-            <div class="error" style="color: red;"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-
-        <label for="title">Title:</label><br>
-        <input type="text" name="title" id="title" required style="width:100%; margin-bottom:10px;"><br>
-
-        <label for="author">Author:</label><br>
-        <input type="text" name="author" id="author" required style="width:100%; margin-bottom:10px;"><br>
-
-        <label for="location">Location:</label><br>
-        <input type="text" name="location" id="location" required style="width:100%; margin-bottom:10px;"><br>
-
-        <label for="category_id">Category:</label><br>
-        <input type="text" name="category_id" id="category_id" required style="width:100%; margin-bottom:10px;"><br>
-
-        <label for="image">Image:</label><br>
-        <input type="file" name="image" id="image" style="margin-bottom:10px;"><br>
-
-        <label for="description">Description:</label><br>
-        <textarea id="description" name="description" rows="4" required style="width:100%; margin-bottom:10px;"></textarea><br>
-
-        <button type="submit" style="padding: 10px 20px; font-size: 1em;">Add Book</button>
+        <table>
+            <tr>
+                <td><label for="title">Title:</label></td>
+                <td><input type="text" name="title" id="title" required></td>
+            </tr>
+            <tr>
+                <td><label for="author">Author:</label></td>
+                <td><input type="text" name="author" id="author" required></td>
+            </tr>
+            <tr>
+                <td><label for="location">Location:</label></td>
+                <td><input type="text" name="location" id="location" required></td>
+            </tr>
+            <tr>
+                <td><label for="category_id">Category ID:</label></td>
+                <td><input type="text" name="category_id" id="category_id" required></td>
+            </tr>
+            <tr>
+                <td><label for="image">Image:</label></td>
+                <td><input type="file" name="image" id="image"></td>
+            </tr>
+            <tr>
+                <td><label for="description">Description:</label></td>
+                <td><textarea name="description" id="description" rows="4" required></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <button type="submit">Add Book</button>
+                </td>
+            </tr>
+        </table>
     </form>
+</div>
+
 </body>
 </html>
