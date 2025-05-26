@@ -49,18 +49,16 @@ if (!isset($_SESSION["username"])) {
 
         .back-button {
             display: inline-block;
-            margin-bottom: 25px;
-            background-color: rgb(10, 244, 37);
-            color: white;
-            padding: 10px 18px;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            background-color: #28a745;
+            color: #fff;
             text-decoration: none;
             border-radius: 6px;
-            font-weight: bold;
             transition: background-color 0.3s ease;
         }
-
         .back-button:hover {
-            background-color: rgb(8, 243, 55);
+            background-color: #218838;
         }
     </style>
 </head>
@@ -92,16 +90,6 @@ if (!isset($_SESSION["username"])) {
         <li><strong>HTML5/CSS3</strong> – Frontend layout and styling</li>
         <li><strong>JavaScript</strong> – Dynamic interactions (e.g., book carousel)</li>
     </ul>
-
-    <h2>Purpose</h2>
-    <p>
-        This system helps libraries manage their inventory and improves access for readers. It can be customized for schools, colleges, or public libraries looking to digitize their catalog and operations.
-    </p>
-
-    <h2>Developer Note</h2>
-    <p>
-        This project was developed to demonstrate core concepts of web development, database integration, and UI/UX best practices. It can be extended with features like user roles, book reservations, overdue reminders, and analytics.
-    </p>
 </div>
 
 </body>
