@@ -163,7 +163,7 @@ if (!isset($_SESSION["username"])) {
             </a>
             <a href="book.php" class="box bg-red">
                 <img src="images/book.webp" alt="Library">
-                <span>Book</span>
+                <span>Library</span>
             </a>
             <a href="addbook.php" class="box bg-purple">
                 <img src="images/addbook.png" alt="addbook">
