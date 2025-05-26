@@ -45,7 +45,7 @@ if (isset($_GET['category_name'])) {
         }
     }
 } else {
-    $result = $conn->query("SELECT * FROM book ORDER BY name DESC");
+    $result = $conn->query("SELECT * FROM book ORDER BY id DESC");
     while ($row = $result->fetch_assoc()) {
         $books[] = $row;
     }
