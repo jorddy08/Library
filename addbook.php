@@ -19,7 +19,7 @@ $error = "";
 
 // ✅ Fetch category options from DB
 $categories = [];
-$result = $conn->query("SELECT name, name FROM categories WHERE name IN (
+$result = $conn->query("SELECT name FROM categories WHERE name IN (
     'Classic Fiction',
     'Science Fiction / Dystopian',
     'Fantasy',
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
-    $category_name = intval($_POST['category_name']); // comes from dropdown
+    $category_name = trim($_POST['category_name']); // Now as string
     $imageFileName = null;
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -55,9 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if (!$error && $title && $author && $location) {
+    if (!$error && $title && $author && $location && $category_name) {
         $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_name) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssi", $title, $author, $location, $description, $imageFileName, $category_name);
+        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_name);
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -73,87 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Add Book</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e2f;
-            color: white;
-            margin: 0;
-            padding: 40px;
-        }
-
-        .form-container {
-            max-width: 700px;
-            margin: 0 auto;
-            background-color: #2c2c3c;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #ffffff;
-        }
-
-        a.back-button {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 16px;
-            background-color: #28a745;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-        }
-
-        a.back-button:hover {
-            background-color: #218838;
-        }
-
-        table {
-            width: 100%;
-        }
-
-        td {
-            padding: 10px;
-        }
-
-        input[type="text"], textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #444;
-            color: white;
-        }
-
-        input[type="file"] {
-            color: white;
-        }
-
-        button[type="submit"] {
-            background-color: #8e44ad;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #732d91;
-        }
-
-        .error {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            text-align: center;
-        }
+        /* your existing CSS styles */
     </style>
 </head>
 <body>
@@ -184,21 +104,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tr>
                 <td><label for="category_name">Category:</label></td>
                 <td>
-                    <select name="category_name" name="category_name" required>
+                    <select name="category_name" id="category_name" required>
                         <option value="">-- Select Category --</option>
                         <?php foreach ($categories as $cat): ?>
-                            <option value="<?= $cat['name'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                            <option value="<?= htmlspecialchars($cat['name']) ?>"><?= htmlspecialchars($cat['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td><label for="image">Image:</label></td>
-                <td><input type="file" id="image" id="image"></td>
+                <td><input type="file" name="image" id="image"></td>
             </tr>
             <tr>
                 <td><label for="description">Description:</label></td>
-                <td><textarea name="description" name="description" rows="4" required></textarea></td>
+                <td><textarea name="description" id="description" rows="4" required></textarea></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align:center;">
