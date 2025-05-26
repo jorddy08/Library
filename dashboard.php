@@ -134,7 +134,7 @@ if (!isset($_SESSION["username"])) {
         <a href="author.php">Author</a>
         <a href="location_rack.php">Location Rack</a>
         <a href="book.php">Book</a>
-        <a href="addbook.php">Issue Book</a>
+        <a href="addbook.php">Add Book</a>
         <a href="logout.php">Logout</a>
     </div>
 
