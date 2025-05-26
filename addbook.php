@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$error) {
-        $stmt = $conn->prepare("INSERT INTO books (title, author, location, category_id, image_path, description) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO book (title, author, location, category_id, image_path, description) VALUES (?, ?, ?, ?, ?, ?)");
         if ($stmt) {
             $stmt->bind_param("ssssss", $title, $author, $location, $category_id, $image_path, $description);
             if ($stmt->execute()) {
