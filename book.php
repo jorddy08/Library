@@ -69,7 +69,7 @@ if ($result && $result->num_rows > 0) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Books Carousel</title>
+    <title>Books Scrollable</title>
     <style>
         :root {
             --background: #1e1e2f;
@@ -123,14 +123,12 @@ if ($result && $result->num_rows > 0) {
             margin-bottom: 15px;
         }
 
+        /* Removed arrow buttons styles */
+
         .carousel-wrapper {
-            position: relative;
             max-width: 90%;
             margin: 0 auto;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px 0;
         }
 
@@ -140,6 +138,7 @@ if ($result && $result->num_rows > 0) {
             overflow-x: auto;
             scroll-behavior: smooth;
             padding-bottom: 10px;
+            -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
         }
 
         .carousel::-webkit-scrollbar {
@@ -176,33 +175,6 @@ if ($result && $result->num_rows > 0) {
             border-radius: 8px;
             margin-bottom: 15px;
             background-color: #444;
-        }
-
-        .arrow-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0,0,0,0.4);
-            border: none;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 5px 12px;
-            border-radius: 50%;
-            user-select: none;
-            z-index: 10;
-        }
-
-        .arrow-btn:hover {
-            background-color: rgba(0,0,0,0.6);
-        }
-
-        .arrow-left {
-            left: 5px;
-        }
-
-        .arrow-right {
-            right: 5px;
         }
 
         #expandedView {
@@ -286,7 +258,7 @@ if ($result && $result->num_rows > 0) {
     <div class="error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 <div class="carousel-wrapper">
-    <button class="arrow-btn arrow-left" onclick="scrollCarousel(-1)">&#10094;</button>
+    <!-- Removed arrow buttons -->
     <div class="carousel" id="carousel">
         <?php foreach ($books as $book): ?>
             <?php $imagePath = 'uploads/' . $book['image']; ?>
@@ -314,8 +286,6 @@ if ($result && $result->num_rows > 0) {
             <p style="color: var(--foreground);">No books found.</p>
         <?php endif; ?>
     </div>
-
-    <button class="arrow-btn arrow-right" onclick="scrollCarousel(1)">&#10095;</button>
 </div>
 
 <div id="expandedView" onclick="closeExpandedView()">
@@ -331,12 +301,7 @@ if ($result && $result->num_rows > 0) {
 </div>
 
 <script>
-    const carousel = document.getElementById('carousel');
-
-    function scrollCarousel(direction) {
-        const scrollAmount = 240;
-        carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    }
+    // Removed scrollCarousel function and arrow buttons
 
     function openExpandedView(imageSrc, title, author, location, description, category_id) {
         document.getElementById('expandedImage').src = imageSrc;
