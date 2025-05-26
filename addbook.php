@@ -19,7 +19,7 @@ $error = "";
 
 // ✅ Fetch category options from DB
 $categories = [];
-$result = $conn->query("SELECT name, name FROM categories WHERE name IN (
+$result = $conn->query("SELECT id, name FROM categories WHERE name IN (
     'Classic Fiction',
     'Science Fiction / Dystopian',
     'Fantasy',
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
-    $category_name = intval($_POST['category_name']); // comes from dropdown
+    $category_name = trim($_POST['category_name']); // changed from intval to trim()
     $imageFileName = null;
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -55,9 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if (!$error && $title && $author && $location) {
+    if (!$error && $title && $author && $location && $category_name) {
         $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_name) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssi", $title, $author, $location, $description, $imageFileName, $category_name);
+        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_name); // changed bind_param to all strings
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -184,10 +184,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tr>
                 <td><label for="category_name">Category:</label></td>
                 <td>
-                    <select name="category_name" name="category_name" required>
+                    <select name="category_name" id="category_name" required>
                         <option value="">-- Select Category --</option>
                         <?php foreach ($categories as $cat): ?>
-                            <option value="<?= $cat['name'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                            <option value="<?= htmlspecialchars($cat['name']) ?>"><?= htmlspecialchars($cat['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </td>
