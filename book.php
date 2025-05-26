@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $author = trim($_POST['author']);
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
-    $category_id = trim($_POST['category_id']);
+    $category_name = trim($_POST['category_name']);
     $imageFileName = null;
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -45,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$error && $title && $author && $location) {
-        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_id);
+        $stmt = $conn->prepare("INSERT INTO book (title, author, location, description, image, category_name) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $title, $author, $location, $description, $imageFileName, $category_name);
         $stmt->execute();
         $stmt->close();
         header("Location: book.php");
@@ -295,7 +295,7 @@ if ($result && $result->num_rows > 0) {
                     '<?= htmlspecialchars($book['author'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['location'], ENT_QUOTES) ?>',
                     '<?= htmlspecialchars($book['description'] ?? '', ENT_QUOTES) ?>',
-                    '<?= htmlspecialchars($book['category_id'] ?? '', ENT_QUOTES) ?>'
+                    '<?= htmlspecialchars($book['category_name'] ?? '', ENT_QUOTES) ?>'
                 )">
                 <?php if (!empty($book['image']) && file_exists($imagePath)): ?>
                     <img src="<?= $imagePath ?>" alt="Book Image" class="book-image">
@@ -323,19 +323,19 @@ if ($result && $result->num_rows > 0) {
         <h4 id="descAuthor"></h4>
         <p id="descLocation"></p>
         <p id="descDescription"></p>
-        <p id="desccategory_id"></p>
+        <p id="desccategory_name"></p>
         <button onclick="closeExpandedView()">Close</button>
     </div>
 </div>
 
 <script>
-    function openExpandedView(imageSrc, title, author, location, description, category_id) {
+    function openExpandedView(imageSrc, title, author, location, description, category_name) {
         document.getElementById('expandedImage').src = imageSrc;
         document.getElementById('descTitle').textContent = title;
         document.getElementById('descAuthor').textContent = 'By: ' + author;
         document.getElementById('descLocation').textContent = 'Location: ' + location;
         document.getElementById('descDescription').textContent = 'Description: ' + description;
-        document.getElementById('desccategory_id').textContent = 'Category ID: ' + category_id;
+        document.getElementById('desccategory_name').textContent = 'Category name: ' + category_name;
         document.getElementById('expandedView').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
