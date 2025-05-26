@@ -128,13 +128,12 @@ if (!isset($_SESSION["username"])) {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 150px;
-            height: 150px;
-            background-color: #ffffff;
-            border: 2px solid #007bff;
+            width: 300px;
+            height: 300px;
+            background-color: #f4f4f4; /* Match dashboard background */
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Softer shadow */
         }
 
         .bottom-right-container img {
@@ -192,7 +191,7 @@ if (!isset($_SESSION["username"])) {
 
     <div class="bottom-right-container">
         <!-- Replace with your image -->
-        <img src="images/library-icon.png" alt="Library Icon">
+        <img src="images/bookgif.gif" alt="Library Icon">
     </div>
 
     <script>
