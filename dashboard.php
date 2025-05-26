@@ -132,9 +132,9 @@ if (!isset($_SESSION["username"])) {
         <h2>Library System</h2>
         <a href="category.php">Category</a>
         <a href="author.php">Author</a>
-        <a href="location_rack.php">Location Rack</a>
         <a href="book.php">Library</a>
         <a href="addbook.php">Add Book</a>
+        <a href="about.php">About</a>
         <a href="logout.php">Logout</a>
     </div>
 
@@ -157,10 +157,6 @@ if (!isset($_SESSION["username"])) {
                 <img src="images/author.jpg" alt="Author">
                 <span>Author</span>
             </a>
-            <a href="location_rack.php" class="box bg-yellow">
-                <img src="images/location rack.jpg" alt="Rack">
-                <span>Location Rack</span>
-            </a>
             <a href="book.php" class="box bg-red">
                 <img src="images/book.webp" alt="Library">
                 <span>Library</span>
@@ -168,6 +164,10 @@ if (!isset($_SESSION["username"])) {
             <a href="addbook.php" class="box bg-purple">
                 <img src="images/addbook.png" alt="addbook">
                 <span>Add Book</span>
+            </a>
+            <a href="about.php" class="box bg-yellow">
+                <img src="images/location rack.jpg" alt="about">
+                <span>About</span>
             </a>
         </div>
     </div>
