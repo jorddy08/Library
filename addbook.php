@@ -21,7 +21,7 @@ $error = "";
 $categories = [];
 $result = $conn->query("SELECT id, name FROM categories WHERE name IN (
     'Classic Fiction',
-    'Science Fiction/Dystopian',
+    'Science Fiction/ Dystopian',
     'Fantasy',
     'Historical Fiction',
     'Others'
