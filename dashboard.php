@@ -123,24 +123,6 @@ if (!isset($_SESSION["username"])) {
             position: relative;
             z-index: 1;
         }
-
-        .bottom-right-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            height: 300px;
-            background-color: #f4f4f4; /* Match dashboard background */
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Softer shadow */
-        }
-
-        .bottom-right-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
     </style>
 </head>
 <body>
@@ -189,14 +171,9 @@ if (!isset($_SESSION["username"])) {
         </div>
     </div>
 
-    <div class="bottom-right-container">
-        <!-- Replace with your image -->
-        <img src="images/bird.gif" alt="Library Icon">
-    </div>
-
     <script>
         function delayedLogout(event) {
-            event.preventDefault(); // Prevent immediate navigation
+            event.preventDefault();
             const confirmLogout = confirm("Are you sure you want to logout?");
             if (confirmLogout) {
                 setTimeout(() => {
