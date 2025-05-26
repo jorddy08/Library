@@ -83,22 +83,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #ffffff;
         }
 
-        .back-button {
+        a.back-button {
             display: inline-block;
             margin-bottom: 20px;
-            background-color:rgb(10, 244, 37);
-            color: white;
-            padding: 10px 18px;
+            padding: 10px 16px;
+            background-color: #28a745;
+            color: #fff;
             text-decoration: none;
             border-radius: 6px;
-            font-weight: bold;
             transition: background-color 0.3s ease;
         }
-
-        .back-button:hover {
-            background-color:rgb(8, 243, 55);
+        a.back-button:hover {
+            background-color: #218838;
         }
-
+        
         table {
             width: 100%;
         }
